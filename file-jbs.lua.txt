@@ -1,0 +1,32 @@
+-- Script para encontrar servidores con brainrots secretos en Roblox
+
+local gameId = 1307 -- ID del juego de Roblox
+
+local function findBrainrotServers()
+    local apiUrl = "https://games.roblox.com/v1/games/" .. gameId .. "/servers/Public?sortOrder=Asc&limit=100"
+    local httpService = game:GetService("HttpService")
+    local response = httpService:GetAsync(apiUrl)
+    local servers = httpService:JSONDecode(response)
+
+    local brainrotServers = {}
+    for _, server in ipairs(servers.data) do
+        if string.find(server.name:lower(), "brainrot") then
+            table.insert(brainrotServers, server)
+        end
+    end
+
+    if #brainrotServers > 0 then
+        print("Servidores con brainrots secretos encontrados:")
+        for _, server in ipairs(brainrotServers) do
+            print("ID del servidor: " .. server.id)
+            print("Nombre del servidor: " .. server.name)
+            print("Jugadores actuales: " .. server.playing)
+            print("Jugadores máximos: " .. server.maxPlayers)
+            print("-----------------------------------------")
+        end
+    else
+        print("No se encontraron servidores con brainrots secretos.")
+    end
+end
+
+findBrainrotServers()
